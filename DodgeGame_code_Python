@@ -1,0 +1,607 @@
+import turtle, random, time
+
+# -------------------------------------------------- VAIRABLES ----------------------------- #
+SCREEN = turtle.Screen()
+SCREEN.colormode(255)
+SCREEN.bgcolor(0,0,0)
+
+game_active = False
+
+shuffled = False
+
+distance = 20
+
+count = 3
+
+PEN = turtle.Pen()
+PEN.speed(10)
+PEN.hideturtle()
+PEN.penup()
+PEN.width(5)
+PEN.right(90)
+
+PEN2 = turtle.Pen()
+PEN2.speed(10)
+PEN2.hideturtle()
+PEN2.penup()
+PEN2.width(5)
+PEN2.setpos(0,75)
+PEN2.color(255, 248, 48)
+PEN2.write("Press A and D to move",move=False, align="center", font=("Arial", 30, "normal"))
+PEN2.setpos(0,25)
+PEN2.write("Press < and > to dash",move=False, align="center", font=("Arial", 30, "normal"))
+PEN2.setpos(0,-25)
+PEN2.color(224, 43, 79)
+PEN2.write("Don't get hit by the blocks!",move=False, align="center", font=("Arial", 30, "normal"))
+PEN2.setpos(0,-75)
+PEN2.color(28, 148, 15)
+PEN2.write("Press spacebar to start",move=False, align="center", font=("Arial", 30, "normal"))
+
+player_move = turtle.Pen()
+player_move.speed(10)
+player_move.hideturtle()
+player_move.penup()
+player_move.left(180)
+player_move.setpos(0, -200)
+
+player = turtle.Pen()
+player.left(90)
+player.speed(10)
+player.shapesize(3, 3, 3)
+player.penup()
+player.setpos(player_move.xcor(), player_move.ycor())
+
+score = 1
+
+score_pen = turtle.Pen()
+score_pen.speed(10)
+score_pen.penup()
+score_pen.setpos(-30, 315)
+score_pen.width(3)
+score_pen.hideturtle()
+score_pen.write("Score: " + str(score),move=False, align="left", font=("Arial", 15, "normal"))
+
+# obstacle vairables ( 10 )
+
+obs1 = turtle.Pen()
+obs1.speed(10)
+obs1.penup()
+obs1.setpos(-250, 240)
+obs1.right(90)
+obs1.shapesize(2, 2, 2)
+obs1.shape('square')
+
+obs2 = turtle.Pen()
+obs2.speed(10)
+obs2.penup()
+obs2.setpos(-250, 240)
+obs2.right(90)
+obs2.shapesize(2, 2, 2)
+obs2.shape('square')
+
+obs3 = turtle.Pen()
+obs3.speed(10)
+obs3.penup()
+obs3.setpos(-250, 240)
+obs3.right(90)
+obs3.shapesize(2, 2, 2)
+obs3.shape('square')
+
+obs4 = turtle.Pen()
+obs4.speed(10)
+obs4.penup()
+obs4.setpos(-250, 240)
+obs4.right(90)
+obs4.shapesize(2, 2, 2)
+obs4.shape('square')
+
+obs5 = turtle.Pen()
+obs5.speed(10)
+obs5.penup()
+obs5.setpos(-250, 240)
+obs5.right(90)
+obs5.shapesize(2, 2, 2)
+obs5.shape('square')
+
+obs6 = turtle.Pen()
+obs6.speed(10)
+obs6.penup()
+obs6.setpos(-250, 240)
+obs6.right(90)
+obs6.shapesize(2, 2, 2)
+obs6.shape('square')
+
+obs7 = turtle.Pen()
+obs7.speed(10)
+obs7.penup()
+obs7.setpos(-250, 240)
+obs7.right(90)
+obs7.shapesize(2, 2, 2)
+obs7.shape('square')
+
+obs8 = turtle.Pen()
+obs8.speed(10)
+obs8.penup()
+obs8.setpos(-250, 240)
+obs8.right(90)
+obs8.shapesize(2, 2, 2)
+obs8.shape('square')
+
+obs9 = turtle.Pen()
+obs9.speed(10)
+obs9.penup()
+obs9.setpos(-250, 240)
+obs9.right(90)
+obs9.shapesize(2, 2, 2)
+obs9.shape('square')
+
+obs10 = turtle.Pen()
+obs10.speed(10)
+obs10.penup()
+obs10.setpos(-250, 240)
+obs10.right(90)
+obs10.shapesize(2, 2, 2)
+obs10.shape('square')
+
+# -------------------------------------------------- OBSTACLE FUNCTIONS -------------------- #
+
+# resets obstacles pos
+def obsReset():
+  obs1.setpos(-250, 240)
+  obs2.setpos(-250, 240)
+  obs3.setpos(-250, 240)
+  obs4.setpos(-250, 240)
+  obs5.setpos(-250, 240)
+  obs6.setpos(-250, 240)
+  obs7.setpos(-250, 240)
+  obs8.setpos(-250, 240)
+  obs9.setpos(-250, 240)
+  obs10.setpos(-250, 240)
+  print("locations reset")
+
+# chooses random kill spots and moves them there
+def shuffleLocations():
+  global shuffled
+  #location shoosing
+  safe_spot = random.randint(1, 11)
+  print("safe spot chosen")
+  if safe_spot == 1:
+    #safespot here
+    obs1.setpos(-200, obs1.ycor())
+    obs2.setpos(-150, obs2.ycor())
+    obs3.setpos(-100, obs3.ycor())
+    obs4.setpos(-50, obs4.ycor())
+    obs5.setpos(0, obs5.ycor())
+    obs6.setpos(50, obs6.ycor())
+    obs7.setpos(100, obs7.ycor())
+    obs8.setpos(150, obs8.ycor())
+    obs9.setpos(200, obs9.ycor())
+    obs10.setpos(250, obs10.ycor())
+  elif safe_spot == 2:
+    obs1.setpos(-250, obs1.ycor())
+    #safespot here
+    obs2.setpos(-150, obs2.ycor())
+    obs3.setpos(-100, obs3.ycor())
+    obs4.setpos(-50, obs4.ycor())
+    obs5.setpos(0, obs5.ycor())
+    obs6.setpos(50, obs6.ycor())
+    obs7.setpos(100, obs7.ycor())
+    obs8.setpos(150, obs8.ycor())
+    obs9.setpos(200, obs9.ycor())
+    obs10.setpos(250, obs10.ycor())
+  elif safe_spot == 3:
+    obs1.setpos(-250, obs1.ycor())
+    obs2.setpos(-200, obs2.ycor())
+    #safespot here
+    obs3.setpos(-100, obs3.ycor())
+    obs4.setpos(-50, obs4.ycor())
+    obs5.setpos(0, obs5.ycor())
+    obs6.setpos(50, obs6.ycor())
+    obs7.setpos(100, obs7.ycor())
+    obs8.setpos(150, obs8.ycor())
+    obs9.setpos(200, obs9.ycor())
+    obs10.setpos(250, obs10.ycor())
+  elif safe_spot == 4:
+    obs1.setpos(-250, obs1.ycor())
+    obs2.setpos(-200, obs2.ycor())
+    obs3.setpos(-150, obs3.ycor())
+    #safespot here
+    obs4.setpos(-50, obs4.ycor())
+    obs5.setpos(0, obs5.ycor())
+    obs6.setpos(50, obs6.ycor())
+    obs7.setpos(100, obs7.ycor())
+    obs8.setpos(150, obs8.ycor())
+    obs9.setpos(200, obs9.ycor())
+    obs10.setpos(250, obs10.ycor())
+  elif safe_spot == 5:
+    obs1.setpos(-250, obs1.ycor())
+    obs2.setpos(-200, obs2.ycor())
+    obs3.setpos(-150, obs3.ycor())
+    obs4.setpos(-100, obs4.ycor())
+    #safespot here
+    obs5.setpos(0, obs5.ycor())
+    obs6.setpos(50, obs6.ycor())
+    obs7.setpos(100, obs7.ycor())
+    obs8.setpos(150, obs8.ycor())
+    obs9.setpos(200, obs9.ycor())
+    obs10.setpos(250, obs10.ycor())
+  elif safe_spot == 6:
+    obs1.setpos(-250, obs1.ycor())
+    obs2.setpos(-200, obs2.ycor())
+    obs3.setpos(-150, obs3.ycor())
+    obs4.setpos(-100, obs4.ycor())
+    obs5.setpos(-50, obs5.ycor())
+    #safespot here
+    obs6.setpos(50, obs6.ycor())
+    obs7.setpos(100, obs7.ycor())
+    obs8.setpos(150, obs8.ycor())
+    obs9.setpos(200, obs9.ycor())
+    obs10.setpos(250, obs10.ycor())
+  elif safe_spot == 7:
+    obs1.setpos(-250, obs1.ycor())
+    obs2.setpos(-200, obs2.ycor())
+    obs3.setpos(-150, obs3.ycor())
+    obs4.setpos(-100, obs4.ycor())
+    obs5.setpos(-50, obs5.ycor())
+    obs6.setpos(0, obs6.ycor())
+    #safespot here
+    obs7.setpos(100, obs7.ycor())
+    obs8.setpos(150, obs8.ycor())
+    obs9.setpos(200, obs9.ycor())
+    obs10.setpos(250, obs10.ycor())
+  elif safe_spot == 8:
+    obs1.setpos(-250, obs1.ycor())
+    obs2.setpos(-200, obs2.ycor())
+    obs3.setpos(-150, obs3.ycor())
+    obs4.setpos(-100, obs4.ycor())
+    obs5.setpos(-50, obs5.ycor())
+    obs6.setpos(0, obs6.ycor())
+    obs7.setpos(50, obs7.ycor())
+    #safespot here
+    obs8.setpos(150, obs8.ycor())
+    obs9.setpos(200, obs9.ycor())
+    obs10.setpos(250, obs10.ycor())
+  elif safe_spot == 9:
+    obs1.setpos(-250, obs1.ycor())
+    obs2.setpos(-200, obs2.ycor())
+    obs3.setpos(-150, obs3.ycor())
+    obs4.setpos(-100, obs4.ycor())
+    obs5.setpos(-50, obs5.ycor())
+    obs6.setpos(0, obs6.ycor())
+    obs7.setpos(50, obs7.ycor())
+    obs8.setpos(100, obs8.ycor())
+    #safespot here
+    obs9.setpos(200, obs9.ycor())
+    obs10.setpos(250, obs10.ycor())
+  elif safe_spot == 10:
+    obs1.setpos(-250, obs1.ycor())
+    obs2.setpos(-200, obs2.ycor())
+    obs3.setpos(-150, obs3.ycor())
+    obs4.setpos(-100, obs4.ycor())
+    obs5.setpos(-50, obs5.ycor())
+    obs6.setpos(0, obs6.ycor())
+    obs7.setpos(50, obs7.ycor())
+    obs8.setpos(100, obs8.ycor())
+    obs9.setpos(150, obs9.ycor())
+    #safespot here
+    obs10.setpos(250, obs10.ycor())
+  elif safe_spot == 11:
+    obs1.setpos(-250, obs1.ycor())
+    obs2.setpos(-200, obs2.ycor())
+    obs3.setpos(-150, obs3.ycor())
+    obs4.setpos(-100, obs4.ycor())
+    obs5.setpos(-50, obs5.ycor())
+    obs6.setpos(0, obs6.ycor())
+    obs7.setpos(50, obs7.ycor())
+    obs8.setpos(100, obs8.ycor())
+    obs9.setpos(150, obs9.ycor())
+    obs10.setpos(200, obs10.ycor())
+    #safespot here
+  shuffled = True
+  print("shuffled")
+
+# obstacle movement down
+def obsMovement():
+  global obs1,obs2,obs3,obs4,obs5,obs6,obs7,obs8,obs9,obs10,distance,count
+  if obs1.ycor() > player_move.ycor():
+    obs1.forward(distance)
+    obs2.forward(distance)
+    obs3.forward(distance)
+    obs4.forward(distance)
+    obs5.forward(distance)
+    obs6.forward(distance)
+    obs7.forward(distance)
+    obs8.forward(distance)
+    obs9.forward(distance)
+    obs10.forward(distance)
+    print("obsatcles moved down")
+    if (obs1.ycor() > (player.ycor() + 100)) and (count == 0):
+      shuffleLocations()
+    count -= 1
+    print()
+    print("Count: ",count)
+    print()
+
+#obstacle total movement
+def obsTurn():
+  global shuffled,score
+  if not shuffled:
+    colourRevert()
+    obsReset()
+    shuffleLocations()
+    blink()
+    colourChange()
+  obsMovement()
+  time.sleep(0.01)
+  if score < 10:
+    time.sleep(0.01)
+  if score < 20:
+    time.sleep(0.01)
+  if score < 30:
+    time.sleep(0.01)
+  if score < 40:
+    time.sleep(0.01)
+  if score < 50:
+    time.sleep(0.01)
+
+# -------------------------------------------------- UPDATES ------------------------------- #
+#updates score
+def scoreUpdate():
+  global score
+  score += 1
+  score_pen.clear()
+  score_pen.write("Score: " + str(score),move=False, align="left", font=("Arial", 15, "normal"))
+  print("score updated")
+  print("Score :", score)
+
+# -------------------------------------------------- GAME STATE / PRE GAME ----------------- #
+#starts game
+def start():
+  global game_active
+  game_active = True
+
+#game over text
+def gameover():
+    PEN.setpos(0,0)
+    PEN.clear()
+    score_pen.hideturtle()
+    PEN.pendown()
+    PEN.color(255,0,0)
+    PEN.penup()
+    xpos = player_move.xcor()
+    ypos = player_move.ycor()
+    player.setpos(xpos, ypos)
+    PEN.write("Game Over! Nice Try!",move=False, align="center", font=("Arial", 30, "normal"))
+    PEN.setpos(PEN.xcor(), PEN.ycor() - 50)
+    PEN.color(28, 148, 15)
+    PEN.write("Score: " + str(score),move=False, align="center", font=("Arial", 30, "normal"))
+    print("game ended, Score: " ,score)
+
+# draws the border
+def drawSurroundings():
+  PEN.setpos(-250,240)
+  for i in range(11): # draws the 11 lines down
+    PEN.pendown()
+    PEN.forward(450)
+    PEN.penup()
+    PEN.setpos(PEN.xcor() + 50, 240)
+
+  pencol = [(255,0,0),(0,255,0)]
+  PEN.setpos(-300,240) # draws the obs line and player line
+  PEN.left(90)
+  for j in range(2):
+    PEN.pendown()
+    PEN.pencolor(pencol[j])
+    PEN.forward(600)
+    PEN.penup()
+    PEN.setpos(-300,player_move.ycor() - 10)
+  PEN.setpos(-300,-300)
+  PEN.pendown()
+  PEN.pencolor(0,0,0)
+  for k in range(4):
+    PEN.forward(600)
+    PEN.left(90)
+  PEN.penup()
+  print("surroundings drawn")
+
+# -------------------------------------------------- COLLISIONS --------------------------- #
+# checks if the player is outside the border and moves them into the border
+def checkBorderColl():
+  if player_move.xcor() <= -290:
+    player_move.setpos(-250, -200)
+    print("collision -")
+  elif player_move.xcor() >= 290:
+    player_move.setpos(250, -200)
+    print("collision +")
+
+# checks if player collided with obstacles
+def obsCollCheck():
+  global game_active, shuffled, count
+  if (obs1.ycor() <= player.ycor()) and (obs1.xcor() == player.xcor()):
+    game_active = False
+    print("Collision obs1")
+    obs1.color(108, 245, 66)
+    obs1.pencolor(0,0,0)
+  elif (obs2.ycor() <= player.ycor()) and (obs2.xcor() == player.xcor()):
+    game_active = False
+    print("Collision obs2")
+    obs2.color(108, 245, 66)
+    obs2.pencolor(0,0,0)
+  elif (obs3.ycor() <= player.ycor()) and (obs3.xcor() == player.xcor()):
+    game_active = False
+    print("Collision obs3")
+    obs3.color(108, 245, 66)
+    obs3.pencolor(0,0,0)
+  elif (obs4.ycor() <= player.ycor()) and (obs4.xcor() == player.xcor()):
+    game_active = False
+    print("Collision obs4")
+    obs4.color(108, 245, 66)
+    obs4.pencolor(0,0,0)
+  elif (obs5.ycor() <= player.ycor()) and (obs5.xcor() == player.xcor()):
+    game_active = False
+    print("Collision obs5")
+    obs5.color(108, 245, 66)
+    obs5.pencolor(0,0,0)
+  elif (obs6.ycor() <= player.ycor()) and (obs6.xcor() == player.xcor()):
+    game_active = False
+    print("Collision obs6")
+    obs6.color(108, 245, 66)
+    obs6.pencolor(0,0,0)
+  elif (obs7.ycor() <= player.ycor()) and (obs7.xcor() == player.xcor()):
+    game_active = False
+    print("Collision obs7")
+    obs7.color(108, 245, 66)
+    obs7.pencolor(0,0,0)
+  elif (obs8.ycor() <= player.ycor()) and (obs8.xcor() == player.xcor()):
+    game_active = False
+    print("Collision obs8")
+    obs8.color(108, 245, 66)
+    obs8.pencolor(0,0,0)
+  elif (obs9.ycor() <= player.ycor()) and (obs9.xcor() == player.xcor()):
+    game_active = False
+    print("Collision obs9")
+    obs9.color(108, 245, 66)
+    obs9.pencolor(0,0,0)
+  elif (obs10.ycor() <= player.ycor()) and (obs10.xcor() == player.xcor()):
+    game_active = False
+    print("Collision obs10")
+    obs10.color(108, 245, 66)
+    obs10.pencolor(0,0,0)
+  
+  if (obs1.ycor() <= player_move.ycor()) and (game_active == True):
+    scoreUpdate()
+    count = 3
+    shuffled = False
+
+# -------------------------------------------------- MOVEMENT/KEYBINDS -------------------- #
+#player movement functions 
+def left():
+  player_move.forward(50)
+  checkBorderColl()
+  obsCollCheck()
+  print("Player moved left")
+
+def right():
+  player_move.forward(-50)
+  checkBorderColl()
+  obsCollCheck()
+  print("Player moved right")
+
+def leftDash():
+  player_move.setpos(-250,player_move.ycor())
+  checkBorderColl()
+  obsCollCheck()
+  print("Player dashed left")
+
+def rightDash():
+  player_move.setpos(250,player_move.ycor())
+  checkBorderColl()
+  obsCollCheck()
+  print("Player dashed right")
+
+#listens for player input
+turtle.onkey(right, 'd')
+turtle.onkey(rightDash, 'Right')
+turtle.onkey(left, 'a')
+turtle.onkey(leftDash, 'Left')
+SCREEN.onkey(start, 'space')
+
+turtle.listen()
+
+# -------------------------------------------------- COSMETICS/EXTRA ---------------------- #
+#obs colur change
+def colourChange():
+    obs1.color(255,10,10)
+    obs2.color(255,10,10)
+    obs3.color(255,10,10)
+    obs4.color(255,10,10)
+    obs5.color(255,10,10)
+    obs6.color(255,10,10)
+    obs7.color(255,10,10)
+    obs8.color(255,10,10)
+    obs9.color(255,10,10)
+    obs10.color(255,10,10)
+
+#obs colour revert
+def colourRevert():
+    obs1.color(0,0,0)
+    obs2.color(0,0,0)
+    obs3.color(0,0,0)
+    obs4.color(0,0,0)
+    obs5.color(0,0,0)
+    obs6.color(0,0,0)
+    obs7.color(0,0,0)
+    obs8.color(0,0,0)
+    obs9.color(0,0,0)
+    obs10.color(0,0,0)
+
+#obs outline change
+def penColourChange():
+    obs1.pencolor(255,10,10)
+    obs2.pencolor(255,10,10)
+    obs3.pencolor(255,10,10)
+    obs4.pencolor(255,10,10)
+    obs5.pencolor(255,10,10)
+    obs6.pencolor(255,10,10)
+    obs7.pencolor(255,10,10)
+    obs8.pencolor(255,10,10)
+    obs9.pencolor(255,10,10)
+    obs10.pencolor(255,10,10)
+
+#obs outline revert
+def penColourRevert():
+    obs1.pencolor(0,0,0)
+    obs2.pencolor(0,0,0)
+    obs3.pencolor(0,0,0)
+    obs4.pencolor(0,0,0)
+    obs5.pencolor(0,0,0)
+    obs6.pencolor(0,0,0)
+    obs7.pencolor(0,0,0)
+    obs8.pencolor(0,0,0)
+    obs9.pencolor(0,0,0)
+    obs10.pencolor(0,0,0)
+
+#blinking effect
+def blink():
+    penColourChange()
+    penColourRevert()
+    print("Blink")
+
+# -------------------------------------------------- G A M E _  L O O P ------------------- #
+while not game_active:
+  SCREEN.bgcolor(0,0,0)
+  time.sleep(0.1)
+  SCREEN.bgcolor(0,0,0)
+  time.sleep(0.1)
+
+PEN2.clear()
+drawSurroundings()
+player.color(50,50,255)
+player.pencolor(108, 245, 66)
+player.setpos(player_move.xcor(), player_move.ycor())
+time.sleep(0.5)
+obs1.pencolor(255, 10, 10)
+obs2.pencolor(255, 10, 10)
+obs3.pencolor(255, 10, 10)
+obs4.pencolor(255, 10, 10)
+obs5.pencolor(255, 10, 10)
+obs6.pencolor(255, 10, 10)
+obs7.pencolor(255, 10, 10)
+obs8.pencolor(255, 10, 10)
+obs9.pencolor(255, 10, 10)
+obs10.pencolor(255, 10, 10)
+SCREEN.bgcolor(66, 218, 245)
+time.sleep(0.5)
+
+while game_active:
+    xpos = player_move.xcor()
+    ypos = player_move.ycor()
+    player.setpos(xpos, ypos)
+    print("player pos updated")
+
+    obsTurn()
+    if count < 0:
+      count = 3
+    obsCollCheck()
+    
+gameover()
