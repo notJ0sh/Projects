@@ -1,0 +1,182 @@
+import turtle, math, random, time
+
+#------------------------VAIRABLES-----------------------------------------------------------#
+SCREEN = turtle.Screen()
+SCREEN.colormode(255)
+
+PEN = turtle.Pen()
+PEN.speed(10)
+PEN.hideturtle()
+PEN.width(5)
+PEN.penup()
+
+writer = turtle.Pen()
+writer.speed(10)
+writer.hideturtle()
+writer.width(5)
+writer.penup()
+
+player = turtle.Pen()
+player.speed(10)
+player.hideturtle()
+player.penup()
+
+alive = False
+
+time_left = 40
+
+time_pen = turtle.Pen()
+time_pen.color(0, 17, 255)
+time_pen.speed(10)
+time_pen.penup()
+time_pen.setpos(900,900)
+time_pen.hideturtle()
+time_pen.write("Time Left: " + str(time_left),move=False, align="left", font=("Arial", 15, "normal"))
+
+score = 0
+
+score_pen = turtle.Pen()
+score_pen.speed(10)
+score_pen.penup()
+score_pen.setpos(-900,-900)
+score_pen.hideturtle()
+score_pen.write("Score: " + str(score),move=False, align="left", font=("Arial", 15, "normal"))
+
+target1 = turtle.Pen()
+target1.speed(10)
+target1.penup()
+target1.shape('circle')
+target1.shapesize(2, 2, 2)
+target1.color(118, 189, 222)
+target1.setpos(random.randint(-280,280),random.randint(-280,280))
+
+# ------------------------------------------------------ { FUNCTIONS } ----------------------------------------#
+#------------------------GAME STATE/PRE GAME-------------------------------------------------#
+#game start
+def start():
+  global alive 
+  alive = True
+
+#draws border
+def drawBorder():
+    PEN.setpos(-300,-300)
+    PEN.pendown()
+    PEN.setpos(300,-300)
+    PEN.setpos(300,300)
+    PEN.setpos(-300,300)
+    PEN.setpos(-300,-300)
+    PEN.penup()
+    print("Border Drawn")
+
+#instructions part
+def instructions():
+  writer.setpos(0,65)
+  writer.write("Click the ball before time runs out",move=False, align="center", font=("Arial", 25, "normal"))
+  writer.setpos(0,-40)
+  writer.write("Press Spacebar to Start",move=False, align="center", font=("Arial", 30, "normal"))
+
+# game over screen
+def gameover():
+    global alive, score
+    PEN.setpos(0,0)
+    PEN.write("Game Over! Nice Try! Score: " + str(score), False, align="center", font=("Arial", 25, "normal"))
+    
+    print("game ended, Score:" ,score)
+
+    alive = False
+    
+#------------------------UPDATES-------------------------------------------------------------#
+# updates score
+def scoreUpdate():
+    global score
+    score += 1
+    score_pen.clear()
+    score_pen.write("Score: " + str(score),move=False, align="left", font=("Arial", 15, "normal"))
+    print("score updated")
+
+# updates timer
+def timerUpdate():
+    global time_left
+    time_left -= 1
+    
+    time_pen.clear()
+    time_pen.write("Time Left: " + str(time_left),move=False, align="left", font=("Arial", 15, "normal"))
+
+#------------------------TARGET + COLLISION--------------------------------------------------#
+# randomises location
+def locationRandomiser():
+    xloc = random.randint(-280,280)
+    yloc = random.randint(-280,280)
+
+    target1.setpos(xloc, yloc)
+    print("TP'd ball")
+    
+# collision check
+def collision():
+    xdist = math.sqrt((player.xcor() - target1.xcor())**2)
+    ydist = math.sqrt((player.ycor() - target1.ycor())**2)
+    return xdist < 25 and ydist < 25
+
+#------------------------PLAYER INPUT--------------------------------------------------------#
+# movement ( clicks )
+def tp(x,y):
+    player.setpos(x, y)
+
+SCREEN.listen()
+SCREEN.onclick(tp)
+SCREEN.onkey(start, 'space')
+
+#----------------------------------------------------- { MAIN GAME LOOP } -------------------------------------#
+print("-----------START-----------")
+
+instructions() # displays instructions
+
+while not alive: # pre-game loop (useless code just to repeat)
+    SCREEN.bgcolor(118, 189, 222)
+    time.sleep(0.1)
+    SCREEN.bgcolor(117, 188, 221)
+    time.sleep(0.1)
+
+drawBorder() # draws the border around
+SCREEN.bgcolor(95, 217, 180) # turquoise-ish col
+writer.clear() #removes instructions from screen
+target1.color(0,0,0) # changes ball color to black
+time_pen.setpos(200, 310) # brings the score and timer display to the screen
+score_pen.setpos(-280, 310)
+
+while alive: # actual game
+    if collision(): # if collision is detected,
+        print("collision")
+        locationRandomiser() # tps ball to random location
+        scoreUpdate() # updates score
+
+        if score == 25: 
+            target1.shapesize(1, 1, 1) # makes ball smaller if score = 25
+        if score == 50:
+            SCREEN.bgcolor(252, 3, 3) # changes screen color to red
+        if score == 100:
+            target1.color(252, 3, 132) # changes ball color to red-ish
+        
+        if score < 20: # decreases time left proportionate to score
+            time_left = 40
+        elif score < 30:
+            time_left = 35
+        elif score < 40:
+            time_left = 30
+        elif score < 50:
+            time_left = 20
+        elif score < 75:
+            time_left = 15
+        elif score < 100:
+            time_left = 10
+            
+        print()
+
+    timerUpdate() #updates timer
+
+    if time_left == 0: # kill if time left = 0
+        gameover()
+    
+    time.sleep(0.005) # delay thingy
+    
+print("------------END------------")
